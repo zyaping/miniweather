@@ -31,12 +31,14 @@
             android:id="@+id/title_city_name"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_toRightOf="@id/city_seperator"
             android:gravity="center_vertical"
             android:paddingLeft="5dip"
             android:text="北京天气"
             android:textColor="#ffffffff"
-            android:textSize="22.0sp" />
+            android:textSize="22.0sp"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/title_city_manager"
+            android:layout_toEndOf="@+id/title_city_manager" />
 
         <ImageView
             android:id="@+id/title_update_btn"
@@ -45,7 +47,8 @@
             android:layout_alignParentRight="true"
             android:layout_gravity="center"
             android:src="@drawable/title_update"
-            android:visibility="visible" />
+            android:visibility="visible"
+            android:onClick="onClick"/>
 
         <ImageView
             android:id="@+id/title_share"
@@ -78,9 +81,9 @@
                 android:id="@+id/city"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_alignLeft="@+id/time"
                 android:layout_alignParentTop="true"
-                android:layout_marginLeft="15.0dip"
+                android:layout_alignStart="@+id/time"
                 android:singleLine="true"
                 android:text="北京"
                 android:textColor="@android:color/white"
