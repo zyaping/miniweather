@@ -17,7 +17,9 @@
                 <category android:name="android.inrent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".SelectCity">
 
+        </activity>
     </application>
 
 </manifest>
