@@ -54,15 +54,16 @@ public class TodayWeather {
     public String getHigh() {
         return  high;
     }
+    public String getLow() {
+        return  low;
+    }
     public String getType() {
         return type;
     }
     public String getFengli() {
         return  fengli;
     }
-    public String getLow() {
-        return  low;
-    }
+
 
 
 
@@ -73,7 +74,7 @@ public class TodayWeather {
     public void setHigh(String high) {
         this.high = high;
     }
-    public void setLow(String Low) {
+    public void setLow(String low) {
         this.low = low;
     }
     public void setType(String type) {
