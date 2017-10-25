@@ -281,6 +281,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     void updateTodayWeather(TodayWeather todayWeather){
+        String weatherType = todayWeather.getType();
+        int pm25State = Integer.parseInt(todayWeather.getPm25());
+
         city_name_Tv.setText(todayWeather.getCity()+"天气");
         cityTv.setText(todayWeather.getCity());
         timeTv.setText(todayWeather.getUpdatetime()+ "发布");
@@ -292,60 +295,73 @@ public class MainActivity extends Activity implements View.OnClickListener {
         climateTv.setText(todayWeather.getType());
         windTv.setText("风力:"+todayWeather.getFengli());
         Toast.makeText(MainActivity.this,"更新成功!",Toast.LENGTH_SHORT).show();
-    }
-}
 
 
 
 
 
-/*
-
-
-<Imageview
-        getType() {"晴","暴雪","暴雨","大暴雨","大雪","大雨","多云","雷阵雨","雷阵雨冰雹","沙尘暴","特大暴雨","雾","小雪","小雨","阴","雨夹雪","阵雪","中雪","中雨"}
-        switch (){
-                case "晴": android:src="@drawable/biz_plugin_weather_qing";
+        switch (weatherType){
+                case "晴": weatherImg.setImageResource(R.drawable.biz_plugin_weather_qing);
                 break;
-                case "暴雪": android:src="@drawable/biz_plugin_weather_baoxue";
+                case "暴雪": weatherImg.setImageResource(R.drawable.biz_plugin_weather_baoxue);
                 break;
-                case "暴雨": android:src="@drawable/biz_plugin_weather_baoyu";
+                case "暴雨": weatherImg.setImageResource(R.drawable.biz_plugin_weather_baoyu);
                 break;
-                case "大暴雨": android:src="@drawable/biz_plugin_weather_dabaoyu";
+                case "大暴雨": weatherImg.setImageResource(R.drawable.biz_plugin_weather_dabaoyu);
                 break;
-                case "大雪": android:src="@drawable/biz_plugin_weather_daxue";
+                case "大雪": weatherImg.setImageResource(R.drawable.biz_plugin_weather_daxue);
                 break;
-                case "大雨": android:src="@drawable/biz_plugin_weather_dayu";
+                case "大雨": weatherImg.setImageResource(R.drawable.biz_plugin_weather_dayu);
                 break;
-                case "多云": android:src="@drawable/biz_plugin_weather_duoyun";
+                case "多云": weatherImg.setImageResource(R.drawable.biz_plugin_weather_duoyun);
                 break;
-                case ,"雷阵雨": android:src="@drawable/biz_plugin_weather_leizhenyu";
+                case "雷阵雨": weatherImg.setImageResource(R.drawable.biz_plugin_weather_leizhenyu);
                 break;
-                case ,"雷阵雨冰雹": android:src="@drawable/biz_plugin_weather_leizhenyubingbao";
+                case "雷阵雨冰雹": weatherImg.setImageResource(R.drawable.biz_plugin_weather_leizhenyubingbao);
                 break;
-                case "沙尘暴": android:src="@drawable/biz_plugin_weather_沙尘暴";
+                case "沙尘暴": weatherImg.setImageResource(R.drawable.biz_plugin_weather_shachenbao);
                 break;
-                case "特大暴雨": android:src="@drawable/biz_plugin_weather_tedabaoyu";
+                case "特大暴雨": weatherImg.setImageResource(R.drawable.biz_plugin_weather_tedabaoyu);
                 break;
-                case "雾": android:src="@drawable/biz_plugin_weather_wu";
+                case "雾": weatherImg.setImageResource(R.drawable.biz_plugin_weather_wu);
                 break;
-                case "小雪": android:src="@drawable/biz_plugin_weather_xiaoxue";
+                case "小雪": weatherImg.setImageResource(R.drawable.biz_plugin_weather_xiaoxue);
                 break;
-                case "小雨": android:src="@drawable/biz_plugin_weather_xiaoyu";
+                case "小雨": weatherImg.setImageResource(R.drawable.biz_plugin_weather_xiaoyu);
                 break;
-                case "阴": android:src="@drawable/biz_plugin_weather_yin";
+                case "阴": weatherImg.setImageResource(R.drawable.biz_plugin_weather_yin);
                 break;
-                case "雨夹雪": android:src="@drawable/biz_plugin_weather_yujiaxue";
+                case "雨夹雪": weatherImg.setImageResource(R.drawable.biz_plugin_weather_yujiaxue);
                 break;
-                case "阵雪": android:src="@drawable/biz_plugin_weather_zhenxue";
+                case "阵雪": weatherImg.setImageResource(R.drawable.biz_plugin_weather_zhenxue);
                 break;
-                case "阵雨": android:src="@drawable/biz_plugin_weather_zhenyu";
+                case "阵雨": weatherImg.setImageResource(R.drawable.biz_plugin_weather_zhenyu);
                 break;
-                case "中雪": android:src="@drawable/biz_plugin_weather_zhongxue";
+                case "中雪": weatherImg.setImageResource(R.drawable.biz_plugin_weather_zhongxue);
                 break;
-                case "中雨": android:src="@drawable/biz_plugin_weather_zhongyu";
+                case "中雨": weatherImg.setImageResource(R.drawable.biz_plugin_weather_zhongyu);
                 break;
-                deflaut;
+                default:
 
                 }
-*/
+
+                if (pm25State <= 50){
+                    pmImg.setImageResource(R.drawable.biz_plugin_weather_0_50);
+
+                }
+                else if (pm25State >= 51 && pm25State <=100){
+                    pmImg.setImageResource(R.drawable.biz_plugin_weather_51_100);
+
+                }
+                else if (pm25State >= 101 && pm25State <=150){
+                    pmImg.setImageResource(R.drawable.biz_plugin_weather_101_150);
+
+                }
+
+                else if (pm25State >= 201 && pm25State <=300){
+                    pmImg.setImageResource(R.drawable.biz_plugin_weather_201_300);
+                }
+                else
+                    pmImg.setImageResource(R.drawable.biz_plugin_weather_greater_300);
+    }
+}
