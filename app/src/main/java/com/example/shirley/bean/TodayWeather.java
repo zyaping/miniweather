@@ -1,5 +1,6 @@
 package com.example.shirley.bean;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -63,6 +64,9 @@ public class TodayWeather {
     public String getFengli() {
         return  fengli;
     }
+    public String getFengxiang() {
+        return  fengxiang;
+    }
 
 
 
@@ -125,7 +129,10 @@ public class TodayWeather {
                 ", type='" + type + '\'' +
                 '}';
     }
+
+
 }
+
 
 
 

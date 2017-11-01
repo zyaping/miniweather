@@ -5,6 +5,7 @@ package com.example.shirley.miniweather;
  */
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -72,6 +73,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         mCitySelect = (ImageView) findViewById(R.id.title_city_manager);
         mCitySelect.setOnClickListener(this);
+
 
         initView();
     }
@@ -180,6 +182,26 @@ public class MainActivity extends Activity implements View.OnClickListener {
         windTv = (TextView) findViewById(R.id.wind);
         weatherImg =(ImageView) findViewById(R.id.weather_img);
 
+
+
+/*
+            String city = sp.getString("CITY", "N/A");
+            String updatetime = sp.getString("updatetime","N/A");
+            String wendu = sp.getString("wendu","N/A");
+            String shidu = sp.getString("shidu","N/A");
+            String pm25 = sp.getString("pm25","N/A");
+            String quality = sp.getString("quality","N/A");
+            String fengxiang = sp.getString("fengxiang","N/A");
+            String fengli = sp.getString("fengli","N/A");
+            String date = sp.getString("date","N/A");
+            String high = sp.getString("high","N/A");
+            String low = sp.getString("low","N/A");
+            String type = sp.getString("type","N/A");
+
+
+*/
+
+
         city_name_Tv.setText("N/A");
         cityTv.setText("N/A");
         timeTv.setText("N/A");
@@ -190,6 +212,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         temperatureTv.setText("N/A");
         climateTv.setText("N/A");
         windTv.setText("N/A");
+
     }
 
 
@@ -277,7 +300,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        saveData(this);
         return todayWeather;
+
     }
 
     void updateTodayWeather(TodayWeather todayWeather){
@@ -364,4 +389,24 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 else
                     pmImg.setImageResource(R.drawable.biz_plugin_weather_greater_300);
     }
+        private SharedPreferences sp;
+        public void saveData (Activity activity) {
+            sp = activity.getSharedPreferences("config", Context.MODE_PRIVATE);
+
+            SharedPreferences.Editor editor = sp.edit();
+            TodayWeather td = new TodayWeather();
+            editor.putString("City", td.getCity());
+            editor.putString("updatetime",td.getUpdatetime());
+            editor.putString("wendu",td .getWendu());
+            editor.putString("shidu",td.getShidu());
+            editor.putString("pm25",td.getPm25());
+            editor.putString("quality",td.getQuality());
+            editor.putString("fengxiang",td.getFengxiang());
+            editor.putString("fengli",td.getFengli());
+            editor.putString("date",td.getDate());
+            editor.putString("high",td.getHigh());
+            editor.putString("low",td.getLow());
+            editor.putString("type",td.getType());
+            editor.commit();
+        }
 }
