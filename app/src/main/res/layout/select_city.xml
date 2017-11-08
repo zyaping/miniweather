@@ -25,4 +25,24 @@
             android:background="#A71717"
             android:gravity="center" />
     </RelativeLayout>
+
+
+    <!--
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        android:layout_below="@id/title_top">
+
+        <ListView
+            android:layout_below="@id/search_city"
+            android:id="@id/title_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            >
+
+        </ListView>
+    </RelativeLayout>
+    -->
+
 </RelativeLayout>

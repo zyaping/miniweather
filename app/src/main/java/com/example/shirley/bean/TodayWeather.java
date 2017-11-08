@@ -1,5 +1,7 @@
 package com.example.shirley.bean;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
@@ -18,6 +20,9 @@ import java.io.StringReader;
  */
 
 public class TodayWeather {
+
+    private SharedPreferences sp;
+
     private String city;
     private String updatetime;
     private String wendu;
@@ -31,9 +36,7 @@ public class TodayWeather {
     private String low;
     private String type;
 
-    public String getCity() {
-        return city;
-    }
+    public String getCity() {return city;}
     public String getUpdatetime() {
         return updatetime;
     }
@@ -55,9 +58,7 @@ public class TodayWeather {
     public String getHigh() {
         return  high;
     }
-    public String getLow() {
-        return  low;
-    }
+    public String getLow() {return  low;}
     public String getType() {
         return type;
     }
@@ -128,6 +129,27 @@ public class TodayWeather {
                 ", low='" + low + '\'' +
                 ", type='" + type + '\'' +
                 '}';
+    }
+
+
+    public void saveData (Activity activity) {
+        sp = activity.getSharedPreferences("config", Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("city",city);
+        editor.putString("updatetime",updatetime);
+        editor.putString("wendu",wendu);
+        editor.putString("shidu",shidu);
+        editor.putString("pm25",pm25);
+        editor.putString("quality",quality);
+        editor.putString("fengxiang",fengxiang);
+        editor.putString("fengli",fengli);
+        editor.putString("date",date);
+        editor.putString("high",high);
+        editor.putString("low",low);
+        editor.putString("type",type);
+        editor.commit();
+        Log.d("ha" ,"save");
     }
 
 

@@ -36,6 +36,9 @@ import org.xmlpull.v1.XmlPullParserFactory;
 public class MainActivity extends Activity implements View.OnClickListener {
     private static final int UPDATE_TODAY_WEATHER = 1;
 
+
+    private SharedPreferences sp;
+
     private ImageView mUpdateBtn;
     private ImageView mCitySelect;
     private TextView cityTv, timeTv, humidityTv, weekTv, pmDataTv,
@@ -57,6 +60,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weather_info);
+
+        sp = getSharedPreferences("config", MODE_PRIVATE);
 
         mUpdateBtn = (ImageView) findViewById(R.id.title_update_btn);
         mUpdateBtn.setOnClickListener(this);
@@ -184,24 +189,37 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 
 
+
+        String city = sp.getString("city", "N/A");
+        String updatetime = sp.getString("updatetime","N/A");
+        String wendu = sp.getString("wendu","N/A");
+        String shidu = sp.getString("shidu","N/A");
+        String pm25 = sp.getString("pm25","N/A");
+        String quality = sp.getString("quality","N/A");
+        String fengxiang = sp.getString("fengxiang","N/A");
+        String fengli = sp.getString("fengli","N/A");
+        String date = sp.getString("date","N/A");
+        String high = sp.getString("high","N/A");
+        String low = sp.getString("low","N/A");
+        String type = sp.getString("type","N/A");
+        Log.d("hazyp", city);
+
+
+
+        city_name_Tv.setText(city+"天气");
+        cityTv.setText(type);
+        timeTv.setText(updatetime+ "发布");
+        humidityTv.setText("湿度:"+shidu);
+        pmDataTv.setText(pm25);
+        pmQualityTv.setText(quality);
+        weekTv.setText(date);
+        temperatureTv.setText(low+"~"+high);
+        climateTv.setText(fengxiang);
+        windTv.setText("风力:"+fengli);
+
+
+
 /*
-            String city = sp.getString("CITY", "N/A");
-            String updatetime = sp.getString("updatetime","N/A");
-            String wendu = sp.getString("wendu","N/A");
-            String shidu = sp.getString("shidu","N/A");
-            String pm25 = sp.getString("pm25","N/A");
-            String quality = sp.getString("quality","N/A");
-            String fengxiang = sp.getString("fengxiang","N/A");
-            String fengli = sp.getString("fengli","N/A");
-            String date = sp.getString("date","N/A");
-            String high = sp.getString("high","N/A");
-            String low = sp.getString("low","N/A");
-            String type = sp.getString("type","N/A");
-
-
-*/
-
-
         city_name_Tv.setText("N/A");
         cityTv.setText("N/A");
         timeTv.setText("N/A");
@@ -213,9 +231,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         climateTv.setText("N/A");
         windTv.setText("N/A");
 
+*/
     }
-
-
 
 
     private TodayWeather parseXML(String xmldata){
@@ -287,6 +304,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                                 typeCount++;
                             }
                         }
+                        todayWeather.saveData(this);
                         break;
                     // 判断当前事件是否为标签元素结束事件
                     case XmlPullParser.END_TAG:
@@ -300,7 +318,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        saveData(this);
         return todayWeather;
 
     }
@@ -389,13 +406,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 else
                     pmImg.setImageResource(R.drawable.biz_plugin_weather_greater_300);
     }
-        private SharedPreferences sp;
+
+         /*
+
         public void saveData (Activity activity) {
-            sp = activity.getSharedPreferences("config", Context.MODE_PRIVATE);
+            //sp = activity.getSharedPreferences("config", Context.MODE_PRIVATE);
 
             SharedPreferences.Editor editor = sp.edit();
             TodayWeather td = new TodayWeather();
-            editor.putString("City", td.getCity());
+            editor.putString("city", td.getCity());
             editor.putString("updatetime",td.getUpdatetime());
             editor.putString("wendu",td .getWendu());
             editor.putString("shidu",td.getShidu());
@@ -408,5 +427,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
             editor.putString("low",td.getLow());
             editor.putString("type",td.getType());
             editor.commit();
+            Log.d("ha" ,"save");
         }
+        */
+
 }
