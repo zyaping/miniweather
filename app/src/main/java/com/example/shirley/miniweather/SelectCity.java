@@ -161,7 +161,7 @@ public class SelectCity extends Activity implements View.OnClickListener {
                 break;
 
             default:
-                break;
+              break;
         }
     }
 }
