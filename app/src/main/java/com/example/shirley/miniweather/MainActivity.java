@@ -152,11 +152,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
             SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
             String cityCode = sharedPreferences.getString("main_city_code","101010100");
             String cityCode1 = sharedPreferences.getString("main_city_code","101160101");
-            Log.d("myWeather",cityCode1);
+            Log.d("myWeather",cityCode);
 
             if (NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE) {
                 Log.d("myWeather", "网络OK");
-                queryWeatherCode(cityCode1);
+                queryWeatherCode(cityCode);
             }
             else {
                 Log.d("myWeather", "网络挂了");

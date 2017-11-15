@@ -1,167 +1,271 @@
 package com.example.shirley.miniweather;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shirley.app.EditTextListViewAdapter;
 import com.example.shirley.app.MyApplication;
 import com.example.shirley.bean.City;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Created by shirley on 2017/10/18.
  */
 
-public class SelectCity extends Activity implements View.OnClickListener {
+public class SelectCity extends Activity implements View.OnClickListener{
     private ImageView mBackbtn;
-    private TextView currentCity;
-    private EditText editText;
-    public String selectedID;
+    private ListView listCity;
+    private MyApplication mApplication;
+
+
+
+    private List<City> cList;
+    private List<City> newlist = new ArrayList<City>(); //显示搜索后的数据
+    private EditTextListViewAdapter adapter;
+    private TextView currentCityNameTv;
+    private EditText mEditText;
+    private String cityName="北京";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceStage) {
-
         super.onCreate(savedInstanceStage);
         setContentView(R.layout.select_city);
-
-        currentCity = (TextView)findViewById(R.id.title_city_name);
-        SharedPreferences sharedPreferences = getSharedPreferences("UPCT", MODE_PRIVATE);
-        currentCity.setText("当前城市：" + sharedPreferences.getString("updateCityName", "Mini Weather"));
-
-        mBackbtn = (ImageView)findViewById(R.id.title_back);
+        mBackbtn = (ImageView) findViewById(R.id.title_back);
         mBackbtn.setOnClickListener(this);
 
+        init();
 
-        MyApplication myApplication = (MyApplication)getApplication();
-
-        final List<String> data = new ArrayList<>();//存放城市名称
-        final List<String> data2 = new ArrayList<>();//存放城市名称，与上面一起完成搜索城市时候的配合
-        final List<String> cityID = new ArrayList<>();//存放城市的代号
-        final List<String> cityID2 = new ArrayList<>();//存放城市代号，配合完成搜索
-        final List<String> cityPY = new ArrayList<>();//存放城市的拼音，全拼
-
-        Iterator<City> it = myApplication.getCityList().iterator();
-
-        while (it.hasNext()) {//从原来整个database中筛选城市代号、城市名和城市拼音
-            City tmp = it.next();
-            String cityname1 = tmp.getCity();
-            String cityid1 = tmp.getNumber();
-            String cityAllPY = tmp.getAllPY();//retrieve the pinyin item from database
-            String cityname2 = tmp.getCity();
-            data.add(cityname1);
-            data2.add(cityname2);
-            cityID.add(cityid1);
-            cityID2.add(cityid1);
-            cityPY.add(cityAllPY.toLowerCase());//insert that item into a list called cityPY，拼音变成小写
+        Intent intent = getIntent();
+        String currentCityName = intent.getStringExtra("cityName");
+        if(currentCityName==null){
+            currentCityName = "";
         }
+        currentCityNameTv.setText(getResources().getString(R.string.current_city_name)+currentCityName);
 
-        //将数据库中的城市显示到列表中，需要利用适配器adapter
-        ListView mlistView = (ListView)findViewById(R.id.list_view);
-        final ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
-        mlistView.setAdapter(adapter1);
-        mlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+
+        listCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {//设置list view的点击监听
-                Toast.makeText(SelectCity.this, "您选择的城市是:" + data.get(i), Toast.LENGTH_SHORT).show();
-                selectedID = cityID2.get(i);
-
-                Intent intent = new Intent(SelectCity.this, MainActivity.class);//用intent传递选择城市的号码，在点击list view的item后，直接返回主界面并更新选择城市的天气信息
-                intent.putExtra("cityCode", selectedID);
-                Log.d("cityid", selectedID);
-                setResult(RESULT_OK, intent);
+            public void onItemClick(AdapterView<?> parent,View view,int position,long id){
+                cityName=cList.get(position).getCity();
+                Log.d("城市名称",cityName);
+                //根据cityName获取城市number
+                String cityNumber = getNumFromName(cityName);
+                //城市编号：城市名称
+                String number_name = cityNumber+":"+cityName;
+                //intent 回应, 返回 cityCode
+                Intent i = new Intent();
+                i.putExtra("cityCode", cityNumber);
+                setResult(RESULT_OK, i);
                 finish();
             }
-
         });
 
-        //实现输入城市名称的查找
-        editText = (EditText)findViewById(R.id.search_edit);
-        editText.addTextChangedListener(new TextWatcher() {
+
+
+
+
+        listCity.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
+                final View view1 = view;
+                new AlertDialog.Builder(SelectCity.this)
+                        .setTitle("") //添加为默认城市
+                        .setMessage("添加为默认城市?")
+                        .setPositiveButton("确定",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialoginterface, int i) {
+                                        SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
+                                        //获取当前城市的个数
+                                        int defaultCityCount = sharedPreferences.getInt("defaultCityCount", -1);
 
-            }
+                                        TextView text = (TextView) view1.findViewById(R.id.tvData);
+                                        cityName = (String) text.getText();
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
 
-            }
+                                        editor.putString("defaultCity_"+(defaultCityCount+1),cityName);
+                                        editor.putInt("defaultCityCount", defaultCityCount + 1);//默认城市个数加1
+                                        editor.commit(); //提交当前数据
+                                        Toast.makeText(SelectCity.this, "添加成功", Toast.LENGTH_SHORT).show();
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                data.clear();
-                cityID2.clear();
-                int pyindex = 0;
-                int pyindexCh = 0;
-                Pattern p_str = Pattern.compile("[\\u4e00-\\u9fa5]+");//正则表达式用来判断输入的是否是汉字
-                //汉字搜索
-                if (s.equals(p_str)) {
-                    for (String str : data2) {
-                        if (str.indexOf(editText.getText().toString()) != -1) {
-                            data.add(str);
-                            cityID2.add(cityID.get(pyindexCh));
-                        }
-                        pyindexCh++;
-                    }
-                }
+                                        ArrayList arr = new ArrayList();
+                                        int a = sharedPreferences.getInt("defaultCityCount", -1);
+                                        if(a!=-1) {
+                                            for (int j = 0; j <= defaultCityCount; j++) {
+                                                String defaultCity = sharedPreferences.getString("defaultCity_" + j, "");
+                                                arr.add(defaultCity);
+                                            }
+                                        }
 
+                                        Log.d("defaultCityCount",defaultCityCount+"");
+                                        Log.d("defaultCityCount List",arr.toString());
+
+                                    }
+                                }).setNegativeButton("取消",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialoginterface, int i) {
+                                //Toast.makeText(SelectCity.this, "已取消", Toast.LENGTH_SHORT).show();
+                            }
+                        }).show();
+                return false;
             }
         });
+    }
 
+    //根据城市名称，获取城市编号
+    private String getNumFromName(String cityname) {
+        for (int i = 0; i < cList.size(); i++) {
+            City city = cList.get(i);
+            if (city.getCity() == cityname) {
+                return city.getNumber();
+            }
+        }
+        return "";
+    }
+
+
+    private void init(){
+
+        currentCityNameTv = (TextView)findViewById(R.id.title_name);
+        mBackbtn = (ImageView)findViewById(R.id.title_back);
+        mBackbtn.setOnClickListener(this);
+        mEditText = (EditText)findViewById(R.id.search_edit);
+        mEditText.addTextChangedListener(mTextWatcher); //给EditText设置监听！
+
+        mApplication = (MyApplication)getApplication();
+        //得到listview控件
+        listCity = (ListView) findViewById(R.id.city_list);
+        cList =  mApplication.getCityList(); //获取城市列表！！！
+        Log.d("size...:", cList.size()+"");
+        //创建adapter对象
+        adapter = new EditTextListViewAdapter(this, cList);
+        //为ListView设置Adapter来绑定数据
+        listCity.setAdapter(adapter);
 
     }
 
-      /*
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.title_back:
-                    Intent i = new Intent();
-                    i.putExtra("cityCode", "101160101");
-                    setResult(RESULT_OK, i);
-                    finish();
-                    break;
-                default:
-                    break;
-
+    //当Editetext变化时调用的方法，来判断所输入是否包含在所属数据中
+    private List<City> getNewData(String input_info) {
+        String upCase = input_info.toUpperCase();
+        for (int i = 0; i < cList.size(); i++) {
+            City city = cList.get(i);
+            //汉字检测
+            if (city.getCity().contains(input_info)) {
+                //将遍历到的元素重新组成一个list
+                City city2 = new City();
+                city2.setCity(city.getCity());
+                city2.setAllFristPY(city.getAllFristPY());
+                city2.setAllPY(city.getAllPY());
+                city2.setFirstPY(city.getFirstPY());
+                city2.setNumber(city.getNumber());
+                city2.setProvince(city.getProvince());
+                if(newlist.contains(city2) == false)
+                    newlist.add(city2);
+            }else{
+                //手拼音检测
+                if(city.getAllFristPY().startsWith(upCase) == true){
+                    City city2 = new City();
+                    city2.setCity(city.getCity());
+                    city2.setAllFristPY(city.getAllFristPY());
+                    city2.setAllPY(city.getAllPY());
+                    city2.setFirstPY(city.getFirstPY());
+                    city2.setNumber(city.getNumber());
+                    city2.setProvince(city.getProvince());
+                    if(newlist.contains(city2) == false)
+                        newlist.add(city2);
+                }
             }
         }
-*/
+        //全拼检测
+        for (int i = 0; i < cList.size(); i++) {
+            City city = cList.get(i);
+            if(city.getAllPY().startsWith(upCase) == true){
+                City city2 = new City();
+                city2.setCity(city.getCity());
+                city2.setAllFristPY(city.getAllFristPY());
+                city2.setAllPY(city.getAllPY());
+                city2.setFirstPY(city.getFirstPY());
+                city2.setNumber(city.getNumber());
+                city2.setProvince(city.getProvince());
+                if(newlist.contains(city2) == false)
+                    newlist.add(city2);
+            }
+        }
+        return newlist;
+    }
+
+    TextWatcher mTextWatcher = new TextWatcher() {
+        /**
+         * ==========文字变化前=========
+         *
+         * @param s     改变之前的内容
+         * @param start 开始的位置
+         * @param count 被改变的旧内容数
+         * @param after 改变后的内容数量
+         */
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        /**
+         * ==========文字变化时=========
+         *
+         * @param s      改变之后的内容
+         * @param start
+         * @param before 被改变的内容的数量
+         * @param count
+         */
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            //必须得加上这句！！！
+            newlist.clear();
+            if (mEditText.getText() != null) {
+                String input_info = mEditText.getText().toString();  //获取 “编辑框” 的内容
+                Log.d("EditText Change", input_info);
+                //根据编辑框的内容，getNewData()获取新的newlist
+                newlist = getNewData(input_info);
+                //重新绑定adapter
+                adapter = new EditTextListViewAdapter(SelectCity.this, newlist);
+                listCity.setAdapter(adapter);
+            }
+        }
+        @Override
+        public void afterTextChanged(Editable editable) {
+        }
+    };
+
 
     @Override
-    public void onClick(View v) { //对于城市有无进行区分
-        Intent i = new Intent();
-        switch (v.getId()) {
+    public void onClick(View v) {
+        switch (v.getId()){
             case R.id.title_back:
-                if (selectedID == null) {
-                    SharedPreferences sharedPreferences= getSharedPreferences("LC", MODE_PRIVATE);//这个sharePre用于传递定位城市ID
-                    selectedID = sharedPreferences.getString("LocatedCity", "101160101");//如果点击返回按钮，则返回定位城市
-                }
-                i.putExtra("cityCode", selectedID);
-                setResult(RESULT_OK, i);
+                Intent i = new Intent();
+                i.putExtra("cityCode","101010100");
+                setResult(RESULT_OK,i);
                 finish();
                 break;
-
             default:
-              break;
+                break;
+
         }
     }
 }
