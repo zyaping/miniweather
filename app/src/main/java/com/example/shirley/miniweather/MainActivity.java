@@ -8,13 +8,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.BufferedReader;
@@ -24,14 +28,24 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
+import com.example.shirley.app.MyApplication;
+import com.example.shirley.bean.City;
 import com.example.shirley.bean.TodayWeather;
 import com.example.shirley.miniweather.NetUtil;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
+
+
+
+
+
 
 public class MainActivity extends Activity implements View.OnClickListener {
     private static final int UPDATE_TODAY_WEATHER = 1;
@@ -41,9 +55,25 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private ImageView mUpdateBtn;
     private ImageView mCitySelect;
+
+
+
+
     private TextView cityTv, timeTv, humidityTv, weekTv, pmDataTv,
             pmQualityTv, temperatureTv, climateTv, windTv, city_name_Tv;
     private ImageView weatherImg, pmImg;
+
+
+
+    private List<View> views;
+
+    private ViewPager vp;
+    private ImageView[] dots;
+    private List<City> mCityList;
+    private String cityCode;
+
+
+
 
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -56,32 +86,60 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     };
 
+
+
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.weather_info);
+        setContentView(R.layout.weather_info); //布局设置在主界面上
 
         sp = getSharedPreferences("config", MODE_PRIVATE);
 
-        mUpdateBtn = (ImageView) findViewById(R.id.title_update_btn);
-        mUpdateBtn.setOnClickListener(this);
+        mUpdateBtn = (ImageView) findViewById(R.id.title_update_btn); //更新图标
+        mUpdateBtn.setOnClickListener(this); //可点击更新图标
 
-        if (NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE) {
+        if (NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE) { //检查网络连接状况
             Log.d("myWeather", "网络OK");
-            Toast.makeText(MainActivity.this,"网络OK!", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this,"网络OK!", Toast.LENGTH_LONG).show(); //如果网络连接上，弹出消息"网络OK!"
         }
         else
         {
             Log.d("myWeather", "网络挂了");
-            Toast.makeText(MainActivity.this,"网络挂了!", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this,"网络挂了!", Toast.LENGTH_LONG).show();//如果网络没有连接上，弹出消息"网络挂了!"
         }
 
-        mCitySelect = (ImageView) findViewById(R.id.title_city_manager);
-        mCitySelect.setOnClickListener(this);
+        mCitySelect = (ImageView) findViewById(R.id.title_city_manager); //城市管理图片来源
+        mCitySelect.setOnClickListener(this); //图片可点击
 
 
-        initView();
+
+        mCityList = ((MyApplication) getApplication()).getCityList();
+
+
+
+
+
+        initView(); //初始化主界面上的布局信息
+
+        MyApplication myApplication = (MyApplication) getApplication();
+        Iterator<City> it = myApplication.getCityList().iterator();
+
+
+
     }
+
+
+
+
+
+
+
+
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.title_city_manager){
@@ -108,7 +166,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) { //从激活的SelectCity活动接收返回数据
         if (requestCode == 1 && requestCode == RESULT_OK) {
             String newCitycode= data.getStringExtra("citycode");
             Log.d("myWeather", "选择的城市代码位"+newCitycode);
@@ -126,7 +184,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     /** *
      * @param cityCode
      */
-    private void queryWeatherCode(String cityCode) {
+    private void queryWeatherCode(String cityCode) { //通过城市ID请求天气数据
         final String address = "http://wthrcdn.etouch.cn/WeatherApi?citykey=" + cityCode;
         Log.d("myWeather", address);
         new Thread(new Runnable() {
@@ -173,7 +231,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }).start();
     }
 
-    void initView() {
+    void initView() { //初始化主界面上的布局
         city_name_Tv = (TextView) findViewById(R.id.title_city_name);
         cityTv = (TextView) findViewById(R.id.city);
         timeTv = (TextView) findViewById(R.id.time);
@@ -230,13 +288,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
         temperatureTv.setText("N/A");
         climateTv.setText("N/A");
         windTv.setText("N/A");
-
 */
+
+
+
     }
 
 
-    private TodayWeather parseXML(String xmldata){
-        TodayWeather todayWeather = null;
+    private TodayWeather parseXML(String xmldata){ //解析网络
+        TodayWeather todayWeather = null; //天气信息初始为空
         int fengxiangCount=0;
         int fengliCount =0;
         int dateCount=0;
@@ -322,7 +382,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     }
 
-    void updateTodayWeather(TodayWeather todayWeather){
+    void updateTodayWeather(TodayWeather todayWeather){ //更新天气情况
         String weatherType = todayWeather.getType();
         int pm25State = Integer.parseInt(todayWeather.getPm25());
 
@@ -342,7 +402,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 
 
-        switch (weatherType){
+        switch (weatherType){ //更新天气图片
                 case "晴": weatherImg.setImageResource(R.drawable.biz_plugin_weather_qing);
                 break;
                 case "暴雪": weatherImg.setImageResource(R.drawable.biz_plugin_weather_baoxue);
@@ -387,7 +447,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
                 }
 
-                if (pm25State <= 50){
+                if (pm25State <= 50){ //更新天气PM图片
                     pmImg.setImageResource(R.drawable.biz_plugin_weather_0_50);
 
                 }
