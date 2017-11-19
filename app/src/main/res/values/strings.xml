@@ -2,4 +2,5 @@
     <string name="app_name">miniweather</string>
     <string name="current_city_name">当前城市:北京</string>
     <string name="hint_words">搜索全国城市</string>
+    <string name="action_settings">action_settings</string>
 </resources>

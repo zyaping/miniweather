@@ -28,6 +28,8 @@ import java.util.List;
  * Created by shirley on 2017/10/18.
  */
 
+
+
 public class SelectCity extends Activity implements View.OnClickListener{
     private ImageView mBackbtn;
     private ListView listCity;
@@ -47,8 +49,8 @@ public class SelectCity extends Activity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceStage) {
         super.onCreate(savedInstanceStage);
         setContentView(R.layout.select_city);
-        mBackbtn = (ImageView) findViewById(R.id.title_back);
-        mBackbtn.setOnClickListener(this);
+        //mBackbtn = (ImageView) findViewById(R.id.title_back);
+        //mBackbtn.setOnClickListener(this);
 
         init();
 
@@ -58,7 +60,6 @@ public class SelectCity extends Activity implements View.OnClickListener{
             currentCityName = "";
         }
         currentCityNameTv.setText(getResources().getString(R.string.current_city_name)+currentCityName);
-
 
 
         listCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -222,6 +223,9 @@ public class SelectCity extends Activity implements View.OnClickListener{
          * @param count 被改变的旧内容数
          * @param after 改变后的内容数量
          */
+
+
+
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
@@ -234,9 +238,9 @@ public class SelectCity extends Activity implements View.OnClickListener{
          * @param before 被改变的内容的数量
          * @param count
          */
+
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            //必须得加上这句！！！
             newlist.clear();
             if (mEditText.getText() != null) {
                 String input_info = mEditText.getText().toString();  //获取 “编辑框” 的内容
@@ -254,7 +258,11 @@ public class SelectCity extends Activity implements View.OnClickListener{
     };
 
 
+
     @Override
+
+
+
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.title_back:
@@ -268,5 +276,8 @@ public class SelectCity extends Activity implements View.OnClickListener{
 
         }
     }
+
 }
+
+
 

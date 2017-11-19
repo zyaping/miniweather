@@ -17,6 +17,9 @@ import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -71,6 +74,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private ImageView[] dots;
     private List<City> mCityList;
     private String cityCode;
+
+
+    //更新图标旋转
+    Animation operatingAnim = null;
+    //LinearInterpolator为匀速效果
+    LinearInterpolator lin = null;
+    TodayWeather todayWeather;
+
 
 
 
@@ -145,7 +156,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         if (view.getId() == R.id.title_city_manager){
             Intent i = new Intent(this,SelectCity.class);
             // startActivity(i);
-            startActivityForResult(i,1);
+            startActivityForResult(i,1);  //修改更新按钮的单击事件处理程序
         }
 
         if (view.getId() == R.id.title_update_btn){
@@ -187,6 +198,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void queryWeatherCode(String cityCode) { //通过城市ID请求天气数据
         final String address = "http://wthrcdn.etouch.cn/WeatherApi?citykey=" + cityCode;
         Log.d("myWeather", address);
+
+        //更新按钮旋转
+        operatingAnim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.title_update_anim);
+        lin = new LinearInterpolator(); //LinearInterpolator为匀速效果
+        operatingAnim.setInterpolator(lin);//设置旋转效果
+        //开始旋转
+        if (operatingAnim != null) {
+            mUpdateBtn.startAnimation(operatingAnim);
+            Log.d("start anim","旋转啦");
+        }
+
+        //使用HttpClient获取网络数据
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -393,7 +416,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         pmDataTv.setText(todayWeather.getPm25());
         pmQualityTv.setText(todayWeather.getQuality());
         weekTv.setText(todayWeather.getDate());
-        temperatureTv.setText(todayWeather.getHigh()+"~"+todayWeather.getLow());
+        temperatureTv.setText(todayWeather.getLow()+"~"+todayWeather.getHigh());
         climateTv.setText(todayWeather.getType());
         windTv.setText("风力:"+todayWeather.getFengli());
         Toast.makeText(MainActivity.this,"更新成功!",Toast.LENGTH_SHORT).show();

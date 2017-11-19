@@ -63,6 +63,8 @@
             android:layout_height="45.0dip"
             android:layout_toLeftOf="@id/title_share"
             android:src="@drawable/base_action_bar_action_city" />
+
+
     </RelativeLayout>
 
     <LinearLayout
@@ -70,7 +72,8 @@
         android:layout_height="fill_parent"
         android:layout_below="@id/title"
         android:background="@drawable/biz_plugin_weather_shenzhen_bg"
-        android:orientation="vertical"> <!-- 今日天气信息 -->
+        android:orientation="vertical">
+        <!-- 今日天气信息 -->
         <RelativeLayout
             android:id="@+id/weather_today"
             android:layout_width="fill_parent"
@@ -144,7 +147,8 @@
                             android:singleLine="true"
                             android:text="PM2.5"
                             android:textColor="@android:color/white"
-                            android:textSize="12.0sp" /> <!-- PM2.5数值 -->
+                            android:textSize="12.0sp" />
+                        <!-- PM2.5数值 -->
                         <TextView
                             android:id="@+id/pm_data"
                             android:layout_width="wrap_content"
@@ -241,6 +245,8 @@
                     android:textColor="@android:color/white"
                     android:textSize="20.0sp" />
             </RelativeLayout>
-        </RelativeLayout> <!-- 六日天气信息 --> <!-- 广告等信息 -->
+        </RelativeLayout>
+        <!-- 六日天气信息 -->
+        <!-- 广告等信息 -->
     </LinearLayout>
 </RelativeLayout>
