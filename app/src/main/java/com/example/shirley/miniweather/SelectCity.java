@@ -31,11 +31,15 @@ import java.util.List;
 
 
 public class SelectCity extends Activity implements View.OnClickListener{
-    private ImageView mBackbtn;
     private ListView listCity;
+    private ImageView mBackBtn;
     private MyApplication mApplication;
 
-
+    //private String SelectedId;
+    //private TextView selectcity;
+    //private List<City> data;
+    //ArrayList<String> city = new ArrayList<String>();
+    //ArrayList<String> cityId = new ArrayList<String>();
 
     private List<City> cList;
     private List<City> newlist = new ArrayList<City>(); //显示搜索后的数据
@@ -44,14 +48,10 @@ public class SelectCity extends Activity implements View.OnClickListener{
     private EditText mEditText;
     private String cityName="北京";
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceStage) {
-        super.onCreate(savedInstanceStage);
+    protected void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.select_city);
-        //mBackbtn = (ImageView) findViewById(R.id.title_back);
-        //mBackbtn.setOnClickListener(this);
-
         init();
 
         Intent intent = getIntent();
@@ -61,7 +61,12 @@ public class SelectCity extends Activity implements View.OnClickListener{
         }
         currentCityNameTv.setText(getResources().getString(R.string.current_city_name)+currentCityName);
 
-
+        /**
+         * @param parent 当前ListView
+         * @param view 代表当前被点击的条目
+         * @param position 当前条目的位置
+         * @param id 当前被点击的条目的id
+         */
         listCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent,View view,int position,long id){
@@ -78,10 +83,6 @@ public class SelectCity extends Activity implements View.OnClickListener{
                 finish();
             }
         });
-
-
-
-
 
         listCity.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -143,12 +144,11 @@ public class SelectCity extends Activity implements View.OnClickListener{
         return "";
     }
 
-
     private void init(){
 
         currentCityNameTv = (TextView)findViewById(R.id.title_name);
-        mBackbtn = (ImageView)findViewById(R.id.title_back);
-        mBackbtn.setOnClickListener(this);
+        mBackBtn = (ImageView)findViewById(R.id.title_back);
+        mBackBtn.setOnClickListener(this);
         mEditText = (EditText)findViewById(R.id.search_edit);
         mEditText.addTextChangedListener(mTextWatcher); //给EditText设置监听！
 
@@ -223,9 +223,6 @@ public class SelectCity extends Activity implements View.OnClickListener{
          * @param count 被改变的旧内容数
          * @param after 改变后的内容数量
          */
-
-
-
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
@@ -238,9 +235,9 @@ public class SelectCity extends Activity implements View.OnClickListener{
          * @param before 被改变的内容的数量
          * @param count
          */
-
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            //必须得加上这句！！！
             newlist.clear();
             if (mEditText.getText() != null) {
                 String input_info = mEditText.getText().toString();  //获取 “编辑框” 的内容
@@ -257,27 +254,18 @@ public class SelectCity extends Activity implements View.OnClickListener{
         }
     };
 
-
-
+    //点击“返回”键，关闭当前Activity
     @Override
-
-
-
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.title_back:
-                Intent i = new Intent();
-                i.putExtra("cityCode","101010100");
-                setResult(RESULT_OK,i);
-                finish();
-                break;
-            default:
-                break;
-
+    public void onClick(View view)
+    {
+        if(view.getId() == R.id.title_back){
+            finish(); //结束当前Activity!!!
         }
     }
-
 }
+
+
+
 
 
 

@@ -16,15 +16,19 @@
 
 
         <activity android:name=".MainActivity">
+
+        </activity>
+
+        <activity android:name=".Guide">        <!--在androidManifest文件中注册Activity，并将其设置为程序的入口-->
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity android:name=".SelectCity">
-
-        </activity>
+        </activity>                            //在AndroidManifest.xml文件中 注册Activity—SelectCity
+        <service android:name=".UpdateService" />
     </application>
-
 </manifest>

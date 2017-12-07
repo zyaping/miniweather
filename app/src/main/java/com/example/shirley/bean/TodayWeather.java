@@ -130,7 +130,7 @@ public class TodayWeather {
                 ", type='" + type + '\'' +
                 '}';
     }
-
+/*
 
     public void saveData (Activity activity) {
         sp = activity.getSharedPreferences("config", Context.MODE_PRIVATE);
@@ -152,7 +152,7 @@ public class TodayWeather {
         Log.d("ha" ,"save");
     }
 
-
+*/
 }
 
 
