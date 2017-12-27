@@ -24,22 +24,16 @@ import com.example.shirley.bean.City;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by shirley on 2017/10/18.
  */
-
-
 
 public class SelectCity extends Activity implements View.OnClickListener{
     private ListView listCity;
     private ImageView mBackBtn;
     private MyApplication mApplication;
 
-    //private String SelectedId;
-    //private TextView selectcity;
-    //private List<City> data;
-    //ArrayList<String> city = new ArrayList<String>();
-    //ArrayList<String> cityId = new ArrayList<String>();
 
     private List<City> cList;
     private List<City> newlist = new ArrayList<City>(); //显示搜索后的数据
@@ -70,67 +64,67 @@ public class SelectCity extends Activity implements View.OnClickListener{
         listCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent,View view,int position,long id){
-                cityName=cList.get(position).getCity();
+            cityName=cList.get(position).getCity();
                 Log.d("城市名称",cityName);
-                //根据cityName获取城市number
-                String cityNumber = getNumFromName(cityName);
-                //城市编号：城市名称
-                String number_name = cityNumber+":"+cityName;
-                //intent 回应, 返回 cityCode
-                Intent i = new Intent();
-                i.putExtra("cityCode", cityNumber);
-                setResult(RESULT_OK, i);
-                finish();
-            }
-        });
+            //根据cityName获取城市number
+            String cityNumber = getNumFromName(cityName);
+            //城市编号：城市名称
+            String number_name = cityNumber+":"+cityName;
+            //intent 回应, 返回 cityCode
+            Intent i = new Intent();
+            i.putExtra("cityCode", cityNumber);
+            setResult(RESULT_OK, i);
+            finish();
+        }
+    });
 
         listCity.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
-                final View view1 = view;
-                new AlertDialog.Builder(SelectCity.this)
-                        .setTitle("") //添加为默认城市
-                        .setMessage("添加为默认城市?")
-                        .setPositiveButton("确定",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialoginterface, int i) {
-                                        SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
-                                        //获取当前城市的个数
-                                        int defaultCityCount = sharedPreferences.getInt("defaultCityCount", -1);
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
+            final View view1 = view;
+            new AlertDialog.Builder(SelectCity.this)
+                    .setTitle("") //添加为默认城市
+                    .setMessage("添加为默认城市?")
+                    .setPositiveButton("确定",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialoginterface, int i) {
+                                    SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
+                                    //获取当前城市的个数
+                                    int defaultCityCount = sharedPreferences.getInt("defaultCityCount", -1);
 
-                                        TextView text = (TextView) view1.findViewById(R.id.tvData);
-                                        cityName = (String) text.getText();
+                                    TextView text = (TextView) view1.findViewById(R.id.tvData);
+                                    cityName = (String) text.getText();
 
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                                        editor.putString("defaultCity_"+(defaultCityCount+1),cityName);
-                                        editor.putInt("defaultCityCount", defaultCityCount + 1);//默认城市个数加1
-                                        editor.commit(); //提交当前数据
-                                        Toast.makeText(SelectCity.this, "添加成功", Toast.LENGTH_SHORT).show();
+                                    editor.putString("defaultCity_"+(defaultCityCount+1),cityName);
+                                    editor.putInt("defaultCityCount", defaultCityCount + 1);//默认城市个数加1
+                                    editor.commit(); //提交当前数据
+                                    Toast.makeText(SelectCity.this, "添加成功", Toast.LENGTH_SHORT).show();
 
-                                        ArrayList arr = new ArrayList();
-                                        int a = sharedPreferences.getInt("defaultCityCount", -1);
-                                        if(a!=-1) {
-                                            for (int j = 0; j <= defaultCityCount; j++) {
-                                                String defaultCity = sharedPreferences.getString("defaultCity_" + j, "");
-                                                arr.add(defaultCity);
-                                            }
+                                    ArrayList arr = new ArrayList();
+                                    int a = sharedPreferences.getInt("defaultCityCount", -1);
+                                    if(a!=-1) {
+                                        for (int j = 0; j <= defaultCityCount; j++) {
+                                            String defaultCity = sharedPreferences.getString("defaultCity_" + j, "");
+                                            arr.add(defaultCity);
                                         }
-
-                                        Log.d("defaultCityCount",defaultCityCount+"");
-                                        Log.d("defaultCityCount List",arr.toString());
-
                                     }
-                                }).setNegativeButton("取消",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialoginterface, int i) {
-                                //Toast.makeText(SelectCity.this, "已取消", Toast.LENGTH_SHORT).show();
-                            }
-                        }).show();
-                return false;
-            }
-        });
+
+                                    Log.d("defaultCityCount",defaultCityCount+"");
+                                    Log.d("defaultCityCount List",arr.toString());
+
+                                }
+                            }).setNegativeButton("取消",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialoginterface, int i) {
+                                    //Toast.makeText(SelectCity.this, "已取消", Toast.LENGTH_SHORT).show();
+                                }
+                            }).show();
+            return false;
+        }
+    });
     }
 
     //根据城市名称，获取城市编号
@@ -254,7 +248,7 @@ public class SelectCity extends Activity implements View.OnClickListener{
         }
     };
 
-    //点击“返回”键，关闭当前Activity
+   //点击“返回”键，关闭当前Activity
     @Override
     public void onClick(View view)
     {
@@ -263,9 +257,6 @@ public class SelectCity extends Activity implements View.OnClickListener{
         }
     }
 }
-
-
-
 
 
 

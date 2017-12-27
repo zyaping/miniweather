@@ -20,17 +20,17 @@ import java.util.List;
 
 public class MyApplication extends Application {
     private static final String TAG = "MyAPP";
-    private static MyApplication mApplication;
-    private CityDB mCityDB;
-    private List<City> mCityList;
+    private static MyApplication mApplication; //在MyApplication类中创建geiInstance方法
+    private CityDB mCityDB; //在Application类中 ，打开数据库
+    private List<City> mCityList; //初始化城市信息列表
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "MyApplication->Oncreate");
         mApplication = this;
-        mCityDB = openCityDB();
-        initCityList();
+        mCityDB = openCityDB(); //在Application类中 ，打开数据库
+        initCityList(); //初始化城市信息列表
     }
 
     private void initCityList() {
@@ -45,7 +45,7 @@ public class MyApplication extends Application {
     }
 
     private boolean prepareCityList() {
-        mCityList = mCityDB.getAllCity();
+        mCityList = mCityDB.getAllCity(); //getAllCity()获取所有城市信息
         int i = 0;
         for (City city : mCityList) {
             i++;
@@ -74,7 +74,7 @@ public class MyApplication extends Application {
                 + File.separator + "databases1"
                 + File.separator
                 + CityDB.CITY_DB_NAME;
-        File db = new File(path);
+        File db = new File( path);
         Log.d(TAG, path);
         if (!db.exists()) {
             String pathfolder = "/data"
@@ -82,15 +82,15 @@ public class MyApplication extends Application {
                     + File.separator + getPackageName()
                     + File.separator + "databases1"
                     + File.separator;
-            File dirFirstFolder = new File(pathfolder);
-            if (!dirFirstFolder.exists()) {
-                dirFirstFolder.mkdirs();
-                Log.i("MyApp", "mkdirs");
+            File dirFirstFolder = new File( pathfolder);
+            if (!dirFirstFolder.exists( ) ) {
+                dirFirstFolder.mkdirs( );
+                Log. i("MyApp", "mkdirs");
             }
             Log.i("MyApp", "db is not exists");
             try {
                 InputStream is = getAssets().open("city.db");
-                FileOutputStream fos = new FileOutputStream(db);
+                FileOutputStream fos = new FileOutputStream( db);
                 int len = -1;
                 byte[] buffer = new byte[1024];
                 while ((len = is.read(buffer)) != -1) {

@@ -6,7 +6,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 /**
- * Created by shirley on 2016/12/23.
+ * Created by shirley on 2017/11/29.
  */
 public class UpdateService extends Service{
     private final static String TAG = "UpdateService";

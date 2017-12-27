@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by shirley  on 2016/11/29.
+ * Created by shirley on 2017/11/30.
  */
 public class Guide extends Activity implements ViewPager.OnPageChangeListener{
     private ViewpagerAdapter vpAdapter;
@@ -22,7 +22,7 @@ public class Guide extends Activity implements ViewPager.OnPageChangeListener{
     private List<View> views;
 
     private ImageView[] dots;
-    private int[] ids = {R.id.iv1,R.id.iv2,R.id.iv3};  //声明一个int型数组，存放3个小圆点控件的id
+    private int[] ids = {R.id.iv1, R.id.iv2, R.id.iv3};  //声明一个int型数组，存放3个小圆点控件的id
 
     private Button btn;
 

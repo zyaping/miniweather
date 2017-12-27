@@ -19,7 +19,8 @@
 
         </activity>
 
-        <activity android:name=".Guide">        <!--在androidManifest文件中注册Activity，并将其设置为程序的入口-->
+        <activity android:name=".Guide"
+            android:exported="true">        <!--在androidManifest文件中注册Activity，并将其设置为程序的入口-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
